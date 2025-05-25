@@ -1,0 +1,14 @@
+da23d403@smail.iitm.ac.in
+da24d402@smail.iitm.ac.in
+
+Term 3 - AI at Scale
+
+Email comvention:
+Please mention course ID [ID5003W] in the mail subject, else mails will likely move to spam.
+
+Code repo :
+
+https://drive.google.com/drive/u/0/folders/1iSkEP90Y1gbOgHBoowsRdrp3astqc7rQ
+
+--------------------------------------
+https://medium.com/rahasak/multi-node-spark-cluster-deployment-with-standalone-cluster-manger-abfea8a42c17
