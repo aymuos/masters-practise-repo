@@ -43,17 +43,25 @@ class RLAgent:
         pass
 
     def flatten_state(self, state):
+      
+      # idea is to convert the environment state into a flat numpy array that the neural network can process
+
       if isinstance(state, dict):
           return np.concatenate([np.array(v, dtype=np.float32) for v in state.values()])
       return np.array(state, dtype=np.float32)
 
     def run_policy(self,state):
+        ''' policy execution function '''
         state = self.flatten_state(state)
-        STATE_SIZE = len(state)  # Example: adjust to your actual flattened state size
+        STATE_SIZE = len(state)
         ACTION_SIZE = 11 ** 3  # 3 products, 11 discrete actions each
 
         policy_net = QNetwork(STATE_SIZE, ACTION_SIZE)
-        policy_net.load_state_dict(torch.load(model_path,map_location='cpu'))
+        policy_net.load_state_dict(torch.load(model_path,map_location='cpu')) 
+        
+        # loading a pretrained DQN model 
+        
+
         policy_net.eval()
         state_tensor = torch.FloatTensor(state).unsqueeze(0)
 
