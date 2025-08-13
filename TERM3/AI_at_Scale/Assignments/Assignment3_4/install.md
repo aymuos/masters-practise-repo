@@ -1,0 +1,5 @@
+- conda activate bigdl_class
+- conda activate myenv
+- source .venv/bin/activate
+- conda install -n bigdl_class ipykernel --update-deps --force-reinstall
+- 
