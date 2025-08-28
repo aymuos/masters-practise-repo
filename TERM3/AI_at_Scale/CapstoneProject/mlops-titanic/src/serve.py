@@ -1,0 +1,1 @@
+# Thin wrapper to launch FastAPI/Uvicorn reading config/app.yaml; sets model path and MLflow registry URI via env vars

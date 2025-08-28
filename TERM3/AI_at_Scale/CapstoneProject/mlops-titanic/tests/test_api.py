@@ -1,0 +1,1 @@
+# Spins up the API in test mode and calls /health and /predict with sample payloads; checks response schema and latency budget

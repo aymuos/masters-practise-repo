@@ -1,0 +1,1 @@
+# FastAPI app with /health and /predict endpoints, input schema validation, model loading on startup, and optional probability outputs

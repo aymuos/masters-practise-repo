@@ -1,0 +1,1 @@
+# Computes holdout metrics, AUC, F1, calibration/PR curves, and stores confusion matrix plots; decides “best model” and produces a metrics.json summary

@@ -167,3 +167,9 @@ catboost_info/
 
 */data
 TERM3/AI_at_Scale/Assignments/Assignment3_4/data/*
+
+.venv-mlops/*
+.venv-mlops/bin/python3
+.venv-mlops/bin/python3.10
+.venv-mlops/bin/python
+.venv-mlops/lib64

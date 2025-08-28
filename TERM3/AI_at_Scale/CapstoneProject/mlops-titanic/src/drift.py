@@ -1,0 +1,2 @@
+# Computes distribution shift (e.g., PSI, KS) between reference and incoming data, writes a drift.json with per-feature stats,
+# and exits non-zero or logs an alert when thresholds in params.yaml are exceeded

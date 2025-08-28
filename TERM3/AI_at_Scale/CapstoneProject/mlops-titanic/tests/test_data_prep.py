@@ -1,0 +1,1 @@
+# Validates schema, null handling, and deterministic splits; ensures preprocess stage produces expected columns and rows.
