@@ -1,25 +1,52 @@
 stages:
   preprocess:
-    cmd: python src/data_prep.py
+    cmd: python src/data_preprocessing.py
     deps:
-      - src/data_prep.py
+      - src/data_preprocessing.py
+      - src/utils/logging.py
       - data/raw/train.csv
     outs:
-      - data/processed/train_processed.csv
+      - data/processed/train_processed.parquet
+      - models/preprocess_pipeline
 
   train:
     cmd: python src/train.py
     deps:
       - src/train.py
-      - data/processed/train_processed.csv
+      - src/utils/logging.py
+      - data/processed/train_processed.parquet
     outs:
-      - models/model.pkl
+      - models/model
 
   evaluate:
     cmd: python src/evaluate.py
     deps:
       - src/evaluate.py
-      - models/model.pkl
+      - src/utils/logging.py
+      - data/processed/train_processed.parquet
+      - models/model
     outs:
       - reports/metrics.json
       - reports/confusion_matrix.png
+      
+  drift:
+    cmd: python src/drift_detection.py
+    deps:
+      - src/drift_detection.py
+      - src/utils/logging.py
+      - data/processed/train_processed.parquet
+      - data/incoming/batch.parquet
+    outs:
+      - reports/drift_report.json
+
+  retrain:
+    cmd: python src/retrain.py
+    deps:
+      - src/retrain.py
+      - src/utils/logging.py
+      - data/processed/train_processed.parquet
+      - data/processed/new_train_processed.parquet
+      - models/production
+    outs:
+      - models/candidates
+      - models/production
