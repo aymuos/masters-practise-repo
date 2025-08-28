@@ -23,5 +23,9 @@ Commands :
 
 # DVC 
 
-git is initialised at root , so dvc shall also be initialised at root 
+git is initialised at root , but dvc shall be initialised at mlops-titanic subdirectory 
+
+- dvc init --subdir
+
+
 
