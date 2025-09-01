@@ -1,13 +1,15 @@
 stages:
   preprocess:
-    cmd: python src/data_preprocessing.py
+    cmd: python src/data_prep.py
     deps:
-      - src/data_preprocessing.py
+      - src/data_prep.py
       - src/utils/logging.py
       - data/raw/train.csv
     outs:
       - data/processed/train_processed.parquet
       - models/preprocess_pipeline
+      - reports/data_validation/data_quality_report.json
+      - reports/data_validation/processing_summary.json
 
   train:
     cmd: python src/train.py
@@ -30,9 +32,9 @@ stages:
       - reports/confusion_matrix.png
       
   drift:
-    cmd: python src/drift_detection.py
+    cmd: python src/drift.py
     deps:
-      - src/drift_detection.py
+      - src/drift.py
       - src/utils/logging.py
       - data/processed/train_processed.parquet
       - data/incoming/batch.parquet
@@ -46,7 +48,6 @@ stages:
       - src/utils/logging.py
       - data/processed/train_processed.parquet
       - data/processed/new_train_processed.parquet
-      - models/production
     outs:
       - models/candidates
       - models/production

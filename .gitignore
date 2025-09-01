@@ -168,4 +168,6 @@ catboost_info/
 */data
 TERM3/AI_at_Scale/Assignments/Assignment3_4/data/*
 
-
+TERM3/AI_at_Scale/CapstoneProject/mlops-titanic/data/*
+TERM3/AI_at_Scale/CapstoneProject/mlops-titanic/mlruns/*
+TERM3/AI_at_Scale/CapstoneProject/mlops-titanic/models/*
