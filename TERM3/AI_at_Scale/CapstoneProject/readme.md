@@ -1,4 +1,4 @@
-THe plan !!
+# The Plan !!
 
 1. setting up this repo with structure and DVC 
 2. use titanic dataset to ensure we can load data clean and split comfortably 
@@ -17,15 +17,54 @@ THe plan !!
 
 Commands : 
 
-> Inside of mlops-titanic execute ```python -m venv .venv-mlops``` to create the virtual env 
-> Execute ``` source .venv-mlops/bin/activate ``` 
+## Inside of mlops-titanic execute 
+
+```
+python -m venv .venv-mlops
+```
+
+## to create the virtual env 
+Execute 
+``` 
+source .venv-mlops/bin/activate 
+``` 
 
 
 # DVC 
 
 git is initialised at root , but dvc shall be initialised at mlops-titanic subdirectory 
 
-- dvc init --subdir
+```
+dvc init --subdir
+```
+
+Tell DVC to track file name 
+
+```
+dvc add data/raw/train.csv
+```
 
 
+
+
+
+# Run Docker 
+
+Instructions to run docker container
+
+## Build image
+
+```
+docker build -t titanic-fastapi .
+``` 
+
+## Run container
+
+```
+docker run -d -p 8000:8000 \
+-e MLFLOW_TRACKING_URI=http://host.docker.internal:5000 \
+-e MODEL_NAME=TitanicModel \
+-e MODEL_STAGE=Production \
+titanic-fastapi
+```
 

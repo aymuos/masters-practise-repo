@@ -20,11 +20,15 @@ from utils.logging import get_logger
 from pyspark.sql import SparkSession
 from pyspark.ml import PipelineModel
 from pyspark.ml.classification import LogisticRegressionModel
+import mlflow
 
 logger = get_logger("API")
 
 PREPROC_MODEL_DIR = "models/preprocess_pipeline"
 PROD_MODEL_DIR = "models/production"
+
+model_uri = "models:/TitanicModel/Production" #TODO: Check this  while starting model 
+model = mlflow.pyfunc.load_model(model_uri)
 
 app = FastAPI(title="Titanic MLOps API")
 

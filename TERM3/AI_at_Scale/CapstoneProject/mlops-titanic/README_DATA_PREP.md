@@ -13,222 +13,148 @@ This enhanced data preparation module provides comprehensive data validation, qu
 - **Categorical Value Validation**: Ensures categorical variables contain expected values
 
 ### 🛠️ **Advanced Imputation**
-- **Contextual Age Imputation**: Uses median age by Sex and Pclass for more accurate estimates
-- **Stratified Fare Imputation**: Imputes missing fares based on passenger class
-- **Mode-based Categorical Imputation**: Fills missing categorical values with most frequent values
-- **Feature Engineering from Missing Data**: Creates meaningful features from missing value patterns
+- **Contextual Age Imputation**: Uses median by Sex + Pclass (more accurate than simple median)
+- **Stratified Fare Imputation**: Imputes by passenger class
+- **Smart Categorical Imputation**: Mode-based imputation for categorical variables
+- **Feature Engineering**: Creates new meaningful features from existing data
 
-### 🚀 **Feature Engineering**
-- **Title Extraction**: Extracts and groups passenger titles from names
-- **Family Size Features**: Creates family size and "alone" indicators
-- **Cabin Information**: Preserves cabin availability information as a feature
-- **Enhanced Categorical Encoding**: Comprehensive one-hot encoding with proper handling of rare categories
+### 📊 **Simplified Encoding Strategy**
+- **Label Encoding**: Uses StringIndexer for categorical variables (simpler than one-hot encoding)
+- **Feature Assembly**: Combines numerical and indexed categorical features
+- **Pipeline Persistence**: Saves preprocessing pipeline for consistent transformations
 
-## File Structure
+## Key Improvements
 
-```
-src/
-├── data_prep.py              # Enhanced data preparation module
-├── utils/
-│   └── logging.py            # Logging utilities
-reports/
-└── data_validation/          # Data quality and validation reports
-    ├── data_quality_report.json
-    └── processing_summary.json
-```
+### **1. Data Type Safety**
+- Explicit casting of Age and Fare columns to DoubleType
+- Prevents string data type errors during imputation
+- Ensures numerical operations work correctly
+
+### **2. Simplified Feature Engineering**
+- **Cabin_known**: Binary indicator (0/1) for cabin availability
+- **FamilySize**: SibSp + Parch + 1 (total family members)
+- **IsAlone**: Binary indicator for single passengers
+- **Title**: Extracted and grouped passenger titles
+
+### **3. Robust Imputation Pipeline**
+- **Age**: Median by Sex + Pclass → Overall median fallback
+- **Fare**: Median by Pclass
+- **Embarked**: Mode (most frequent value)
+- **Cabin**: Binary feature + "Unknown" for missing values
 
 ## Usage
 
-### Basic Usage
-
+### **Basic Usage**
 ```python
 from src.data_prep import preprocess_titanic
 
 # Run complete preprocessing pipeline
+df_processed, preproc_model = preprocess_titanic()
+```
+
+### **Custom Paths**
+```python
+# Custom input/output paths
 df_processed, preproc_model = preprocess_titanic(
-    raw_csv="data/raw/train.csv",
-    out_parquet="data/processed/train_processed.parquet",
-    pipeline_out_dir="models/preprocess_pipeline"
+    raw_csv="path/to/raw.csv",
+    out_parquet="path/to/output.parquet",
+    pipeline_out_dir="path/to/pipeline"
 )
 ```
 
-### Individual Functions
+## Output Files
 
-```python
-from src.data_prep import (
-    validate_data_schema,
-    validate_data_quality,
-    advanced_imputation
-)
+### **Processed Data**
+- `data/processed/train_processed.parquet`: Clean, imputed dataset
+- `models/preprocess_pipeline`: Fitted preprocessing pipeline
 
-# Validate schema
-schema_valid = validate_data_schema(df, EXPECTED_SCHEMA)
+### **Validation Reports**
+- `reports/data_validation/data_quality_report.json`: Comprehensive quality analysis
+- `reports/data_validation/processing_summary.json`: Processing statistics
 
-# Check data quality
-quality_report = validate_data_quality(df)
+## Data Quality Report
 
-# Apply advanced imputation
-df_imputed = advanced_imputation(df)
-```
+The quality report includes:
+- Missing value counts and percentages
+- Value range statistics (min, max, mean, stddev)
+- Data type validation
+- Quality issue identification
+- Categorical value validation
 
-## Data Validation Details
+## Processing Summary
 
-### Schema Validation
-The module expects the following schema for the Titanic dataset:
-
-```python
-EXPECTED_SCHEMA = StructType([
-    StructField("PassengerId", IntegerType(), True),
-    StructField("Survived", IntegerType(), True),
-    StructField("Pclass", IntegerType(), True),
-    StructField("Name", StringType(), True),
-    StructField("Sex", StringType(), True),
-    StructField("Age", DoubleType(), True),
-    StructField("SibSp", IntegerType(), True),
-    StructField("Parch", IntegerType(), True),
-    StructField("Ticket", StringType(), True),
-    StructField("Fare", DoubleType(), True),
-    StructField("Cabin", StringType(), True),
-    StructField("Embarked", StringType(), True)
-])
-```
-
-### Quality Checks Performed
-
-1. **Missing Value Analysis**
-   - Count and percentage of missing values per column
-   - Warning for columns with >50% missing values
-
-2. **Value Range Validation**
-   - Age: Checks for values outside 0-120 range
-   - Fare: Checks for negative values or values >1000
-   - Categorical: Validates expected values (e.g., Sex should be "male" or "female")
-
-3. **Statistical Summary**
-   - Min, max, mean, standard deviation for numerical columns
-   - Unique value counts for categorical columns
-
-## Imputation Strategies
-
-### Age Imputation
-1. **Primary Strategy**: Median age by Sex and Pclass combination
-2. **Fallback Strategy**: Overall median age if group-specific median is unavailable
-
-### Fare Imputation
-1. **Primary Strategy**: Median fare by Pclass
-2. **Contextual**: Considers passenger class for more accurate estimates
-
-### Categorical Imputation
-1. **Embarked**: Mode (most frequent value)
-2. **Cabin**: "Unknown" + binary indicator for cabin availability
-
-## Feature Engineering
-
-### New Features Created
-
-1. **Title**: Extracted from Name, grouped into meaningful categories
-   - Common: Mr, Miss, Mrs, Master
-   - Officer: Dr, Rev, Col, Major, Capt
-   - Royalty: Jonkheer, Don, Sir, Countess, Lady
-   - Other: Rare titles
-
-2. **FamilySize**: SibSp + Parch + 1 (passenger themselves)
-
-3. **IsAlone**: Binary indicator (1 if FamilySize == 1, 0 otherwise)
-
-4. **Cabin_known**: Binary indicator for cabin availability
-
-## Output Reports
-
-### Data Quality Report (`data_quality_report.json`)
-```json
-{
-  "total_rows": 891,
-  "total_columns": 12,
-  "missing_values": {
-    "Age": {"count": 177, "percentage": 19.87},
-    "Cabin": {"count": 687, "percentage": 77.10}
-  },
-  "quality_issues": [
-    "High missing values in Cabin: 77.10%"
-  ]
-}
-```
-
-### Processing Summary (`processing_summary.json`)
-```json
-{
-  "input_rows": 891,
-  "output_rows": 891,
-  "input_columns": 12,
-  "output_columns": 2,
-  "categorical_features": 6,
-  "numerical_features": 5,
-  "quality_issues_found": 1,
-  "imputation_applied": true
-}
-```
-
-## Testing
-
-Run the test suite to validate the module:
-
-```bash
-python test_data_prep.py
-```
-
-## DVC Pipeline Integration
-
-The enhanced preprocessing is integrated into the DVC pipeline:
-
-```yaml
-preprocess:
-  cmd: python src/data_prep.py
-  deps:
-    - src/data_prep.py
-    - src/utils/logging.py
-    - data/raw/train.csv
-  outs:
-    - data/processed/train_processed.parquet
-    - models/preprocess_pipeline
-    - reports/data_validation/data_quality_report.json
-    - reports/data_validation/processing_summary.json
-```
+The processing summary tracks:
+- Input/output row counts
+- Feature counts (categorical vs numerical)
+- Quality issues found
+- Imputation status
+- Encoding strategy used
 
 ## Error Handling
 
-The module includes comprehensive error handling:
+- **Schema Validation**: Continues processing even if schema doesn't match exactly
+- **Data Type Issues**: Automatically casts problematic columns to correct types
+- **Missing Values**: Handles missing values gracefully with appropriate imputation
+- **Pipeline Failures**: Comprehensive error logging and graceful degradation
 
-- **Schema Mismatch**: Logs warning but continues processing
-- **Data Quality Issues**: Logs warnings and continues with processing
-- **Imputation Failures**: Falls back to simpler strategies
-- **File I/O Errors**: Graceful error handling with detailed logging
+## Testing
 
-## Performance Considerations
-
-- **Efficient Imputation**: Uses Spark's groupBy operations for contextual imputation
-- **Memory Management**: Processes data in chunks for large datasets
-- **Pipeline Optimization**: Single-pass preprocessing pipeline for efficiency
-
-## Future Enhancements
-
-1. **Advanced Outlier Detection**: Statistical methods for outlier identification
-2. **Automated Feature Selection**: ML-based feature importance ranking
-3. **Cross-Validation**: K-fold validation for imputation strategies
-4. **Real-time Validation**: Streaming data validation capabilities
+Run the test suite to verify functionality:
+```bash
+python test_simple_data_prep.py
+```
 
 ## Dependencies
 
-- PySpark 3.5.1+
-- Python 3.8+
-- Standard libraries: json, pathlib
+- **PySpark**: For distributed data processing
+- **Pathlib**: For file path handling
+- **JSON**: For report generation
+- **Logging**: For comprehensive logging
+
+## Benefits of Simplified Approach
+
+### **1. Performance**
+- Faster processing without one-hot encoding
+- Reduced memory usage
+- Simpler pipeline execution
+
+### **2. Interpretability**
+- Label encoding preserves ordinal relationships
+- Easier to understand feature importance
+- More intuitive for business stakeholders
+
+### **3. Robustness**
+- Fewer failure points in the pipeline
+- Better handling of edge cases
+- More stable across different datasets
+
+## Future Enhancements
+
+1. **Feature Selection**: Add correlation-based feature selection
+2. **Outlier Detection**: Implement statistical outlier detection
+3. **Cross-Validation**: Add cross-validation for imputation strategies
+4. **Automated Tuning**: Auto-tune imputation parameters
+5. **Additional Features**: Create more domain-specific features
+
+## Troubleshooting
+
+### **Common Issues**
+
+1. **Data Type Errors**: Ensure Age and Fare columns are numeric
+2. **Missing Dependencies**: Install PySpark and required packages
+3. **Memory Issues**: Reduce batch size for large datasets
+4. **Schema Mismatches**: Check column names and types in raw data
+
+### **Debug Mode**
+Enable detailed logging by setting log level to DEBUG in your logging configuration.
 
 ## Contributing
 
-When adding new validation rules or imputation strategies:
-
-1. Add comprehensive logging
-2. Include error handling
-3. Update test suite
-4. Document new features
-5. Update DVC pipeline if new outputs are added
+When adding new features:
+1. Follow the existing code structure
+2. Add comprehensive logging
+3. Include error handling
+4. Update validation reports
+5. Document new features
+6. Update DVC pipeline if new outputs are added
+7. Test thoroughly with the test suite

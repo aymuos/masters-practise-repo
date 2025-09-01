@@ -1,0 +1,87 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36" version="28.1.2">
+  <diagram name="Page-1" id="LcqMzfn7U2SmJr_2qCRf">
+    <mxGraphModel dx="1426" dy="793" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="RrbKzdtXT_fbKx5kwPvg-1" target="RrbKzdtXT_fbKx5kwPvg-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-1" value="Raw Data&lt;div&gt;( Titanic Kaggle )&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="380" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="RrbKzdtXT_fbKx5kwPvg-2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="440" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-2" value="Preprocessing" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="380" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-4" value="Spark , DVC" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="480" y="215" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-6" value="Parquet files" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="440" y="280" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="RrbKzdtXT_fbKx5kwPvg-7" target="RrbKzdtXT_fbKx5kwPvg-10" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="440" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-7" value="Training" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="380" y="340" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-8" value="Spark MLlib" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="500" y="355" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="RrbKzdtXT_fbKx5kwPvg-10" target="RrbKzdtXT_fbKx5kwPvg-13" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-10" value="Evaluation" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="380" y="450" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-11" value="Model + Metrics" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="440" y="410" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-12" value="MLFLow" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="500" y="465" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_kIYEzoHphFMQehoxp6A-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="RrbKzdtXT_fbKx5kwPvg-13" target="RrbKzdtXT_fbKx5kwPvg-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_kIYEzoHphFMQehoxp6A-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="RrbKzdtXT_fbKx5kwPvg-13">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="720" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-13" value="Serving&lt;div&gt;(FastAPI)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="380" y="570" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="RrbKzdtXT_fbKx5kwPvg-14" target="RrbKzdtXT_fbKx5kwPvg-18" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="690" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-14" value="Drift Detection&amp;nbsp;&lt;div&gt;(PSI Monitoring)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="230" y="630" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-18" value="Retraining" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="630" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-19" value="MLFLow Registry" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="90" y="700" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="RrbKzdtXT_fbKx5kwPvg-20" value="Docker Image" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="500" y="550" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_kIYEzoHphFMQehoxp6A-4" value="/predict&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="650" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_kIYEzoHphFMQehoxp6A-6" value="/test-drift" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="280" y="570" width="60" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

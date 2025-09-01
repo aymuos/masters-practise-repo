@@ -32,16 +32,17 @@ logger = get_logger("Training")
 PROC_PARQUET = "data/processed/train_processed.parquet"
 MODEL_DIR = "models/model"
 MLFLOW_EXPERIMENT = "Titanic_MLOps"
+APP_NAME = "TitanicTraining"
 
 def train_model(in_parquet: str = PROC_PARQUET, model_out_dir: str = MODEL_DIR):
     try:
         logger.info("[LOG] Starting training with MLflow logging")
 
-        app_name = "TitanicTraining" + time.strftime("%Y%m%d-%H%M%S")+uuid.uuid4().hex[:6]
+        
 
         spark = (
                     SparkSession.builder
-                    .appName(app_name)
+                    .appName(APP_NAME)
                     .config("spark.executor.memory", "4g")
                     .config("spark.executor.cores", "2")
                     .config("spark.cores.max", "4")

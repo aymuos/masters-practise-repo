@@ -1,10 +1,10 @@
 from pathlib import Path
 from utils.logging import get_logger
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, when, isnan, isnull, count, sum as spark_sum, mean, stddev
+from pyspark.sql.functions import col, when, isnan, isnull, count, sum as spark_sum, mean, stddev, regexp_extract
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType
 from pyspark.ml import Pipeline
-from pyspark.ml.feature import StringIndexer, OneHotEncoder, VectorAssembler, Imputer
+from pyspark.ml.feature import StringIndexer, VectorAssembler
 import json
 
 logger = get_logger("DataPreprocessing")
@@ -24,9 +24,9 @@ EXPECTED_SCHEMA = StructType([
     StructField("Age", DoubleType(), True),
     StructField("SibSp", IntegerType(), True),
     StructField("Parch", IntegerType(), True),
-    StructField("Ticket", StringType(), True),
+    StructField("Ticket", IntegerType(), True),
     StructField("Fare", DoubleType(), True),
-    StructField("Cabin", StringType(), True),
+    StructField("Cabin", StringType(), True),   # alphanumeric string
     StructField("Embarked", StringType(), True)
 ])
 
@@ -34,19 +34,25 @@ def validate_data_schema(df, expected_schema):
     """Validate that the dataframe matches expected schema"""
     try:
         actual_schema = df.schema
+
         if actual_schema != expected_schema:
-            logger.warning(f"[WARNING] Schema mismatch. Expected: {expected_schema}, Got: {actual_schema}")
+            logger.warning(f"[WARNING] Schema mismatch. \
+                            Expected: {expected_schema}, Got: {actual_schema}")
             return False
-        logger.info("[LOG] Schema validation passed")
+        logger.info("[LOG]4- Schema validation passed")
         return True
+    
     except Exception as e:
         logger.error(f"[ERROR] Schema validation failed: {e}")
         return False
 
+        # _____________________________________________________________________
+
 def validate_data_quality(df):
     """Perform comprehensive data quality checks"""
-    logger.info("[LOG] Starting data quality validation")
+    logger.info("[LOG] 5- Starting data quality validation")
     
+    # creating a quality_report dict that will store information about the data 
     quality_report = {
         "total_rows": df.count(),
         "total_columns": len(df.columns),
@@ -56,11 +62,21 @@ def validate_data_quality(df):
         "unique_values": {},
         "quality_issues": []
     }
+
+    # remove columns that are not needed for validation
+    columns_to_drop = ["PassengerId","Name", "Ticket", "Cabin"]
+
+    df = df.drop(*columns_to_drop)    # * is the unpacking operator here , it unpacks the list into individual arguments
+
+    logger.info(f"Dropped columns: {columns_to_drop}")
+                 
     
     # Check for missing values
     for col_name in df.columns:
+
         missing_count = df.filter(col(col_name).isNull() | isnan(col(col_name))).count()
         missing_pct = (missing_count / quality_report["total_rows"]) * 100
+
         quality_report["missing_values"][col_name] = {
             "count": missing_count,
             "percentage": round(missing_pct, 2)
@@ -71,10 +87,14 @@ def validate_data_quality(df):
             quality_report["quality_issues"].append(f"High missing values in {col_name}: {missing_pct}%")
             logger.warning(f"[WARNING] High missing values in {col_name}: {missing_pct}%")
     
+
     # Validate specific columns
     # Age validation
+
     if "Age" in df.columns:
+
         age_stats = df.select("Age").summary("count", "min", "max", "mean", "stddev").collect()
+
         quality_report["value_ranges"]["Age"] = {
             "min": age_stats[1]["Age"],
             "max": age_stats[2]["Age"],
@@ -82,15 +102,22 @@ def validate_data_quality(df):
             "stddev": age_stats[4]["Age"]
         }
         
-        # Check for unrealistic age values
-        unrealistic_age = df.filter((col("Age") < 0) | (col("Age") > 120)).count()
+        # Check for unrealistic age values should lie between 0 and 100 
+        unrealistic_age = df.filter((col("Age") < 0) | (col("Age") > 100)).count()
+
         if unrealistic_age > 0:
             quality_report["quality_issues"].append(f"Unrealistic age values: {unrealistic_age} rows")
             logger.warning(f"[WARNING] Found {unrealistic_age} rows with unrealistic age values")
+
+            # Remove unrealistic age values
+            df = df.filter((col("Age") > 0) & (col("Age") < 100))
+            logger.info(f"[LOG] Removed {unrealistic_age} rows with unrealistic age values")
+
     
     # Fare validation
     if "Fare" in df.columns:
         fare_stats = df.select("Fare").summary("count", "min", "max", "mean", "stddev").collect()
+
         quality_report["value_ranges"]["Fare"] = {
             "min": fare_stats[1]["Fare"],
             "max": fare_stats[2]["Fare"],
@@ -99,7 +126,8 @@ def validate_data_quality(df):
         }
         
         # Check for negative or extremely high fares
-        invalid_fare = df.filter((col("Fare") < 0) | (col("Fare") > 1000)).count()
+        invalid_fare = df.filter((col("Fare") < 0.00) | (col("Fare") > 1000.00)).count()
+
         if invalid_fare > 0:
             quality_report["quality_issues"].append(f"Invalid fare values: {invalid_fare} rows")
             logger.warning(f"[WARNING] Found {invalid_fare} rows with invalid fare values")
@@ -145,8 +173,11 @@ def advanced_imputation(df):
     if "Age" in df.columns:
         logger.info("[LOG] Imputing Age using median by Sex and Pclass")
         
+        # Ensure Age column is numeric
+        df_imputed = df_imputed.withColumn("Age", col("Age").cast("double"))
+        
         # Calculate median age by Sex and Pclass
-        age_medians = df.groupBy("Sex", "Pclass").agg(mean("Age").alias("median_age"))
+        age_medians = df_imputed.groupBy("Sex", "Pclass").agg(mean("Age").alias("median_age"))
         
         # Join with original dataframe and fill missing ages
         df_imputed = df_imputed.join(age_medians, ["Sex", "Pclass"], "left")
@@ -169,8 +200,11 @@ def advanced_imputation(df):
     if "Fare" in df.columns:
         logger.info("[LOG] Imputing Fare using median by Pclass")
         
+        # Ensure Fare column is numeric
+        df_imputed = df_imputed.withColumn("Fare", col("Fare").cast("double"))
+        
         # Calculate median fare by Pclass
-        fare_medians = df.groupBy("Pclass").agg(mean("Fare").alias("median_fare"))
+        fare_medians = df_imputed.groupBy("Pclass").agg(mean("Fare").alias("median_fare"))
         
         # Join and fill missing fares
         df_imputed = df_imputed.join(fare_medians, ["Pclass"], "left")
@@ -187,7 +221,7 @@ def advanced_imputation(df):
         logger.info("[LOG] Imputing Embarked using mode")
         
         # Find mode (most frequent value)
-        embarked_counts = df.groupBy("Embarked").count().orderBy("count", ascending=False)
+        embarked_counts = df_imputed.groupBy("Embarked").count().orderBy("count", ascending=False)
         mode_embarked = embarked_counts.first()[0]
         
         df_imputed = df_imputed.fillna({"Embarked": mode_embarked})
@@ -226,8 +260,6 @@ def advanced_imputation(df):
     if "Name" in df.columns:
         logger.info("[LOG] Extracting title from Name")
         
-        from pyspark.sql.functions import regexp_extract
-        
         df_imputed = df_imputed.withColumn(
             "Title",
             regexp_extract(col("Name"), r"([A-Za-z]+)\.", 1)
@@ -251,21 +283,22 @@ def preprocess_titanic(raw_csv: str = RAW_CSV,
                        out_parquet: str = PROC_PARQUET,
                        pipeline_out_dir: str = PREPROC_MODEL_DIR):
     try:
-        logger.info("[LOG] Starting enhanced Spark preprocessing")
+        logger.info("[LOG]1- Starting Spark preprocessing")
 
         spark = (SparkSession.builder
                  .appName("TitanicPreprocessing")
                  .getOrCreate())
-
-        # 1) Load raw CSV with schema validation
-        logger.info("[LOG] Loading raw CSV data")
+        
+        # 1) Load raw CSV
+        logger.info("[LOG]2-Loading raw CSV data")
         df = spark.read.csv(raw_csv, header=True, inferSchema=True)
-        logger.info(f"[LOG] Loaded raw data: rows={df.count()}, cols={len(df.columns)}")
+        logger.info(f"[LOG]3- Loaded raw data: rows={df.count()}, cols={len(df.columns)}")
+
 
         # 2) Schema validation
-        logger.info("[LOG] Validating data schema")
+        logger.info("[LOG]3- Validating data schema")
         if not validate_data_schema(df, EXPECTED_SCHEMA):
-            logger.warning("[WARNING] Schema validation failed, but continuing with processing")
+            logger.warning("[WARNING]3a Schema validation failed, but continuing with processing")
 
         # 3) Data quality validation
         logger.info("[LOG] Performing data quality checks")
@@ -297,26 +330,19 @@ def preprocess_titanic(raw_csv: str = RAW_CSV,
         logger.info(f"[LOG] Categorical columns: {cat_cols}")
         logger.info(f"[LOG] Numerical columns: {num_cols}")
 
-        # 8) Create preprocessing pipeline
-        logger.info("[LOG] Creating preprocessing pipeline")
+        # 8) Create simplified preprocessing pipeline using only StringIndexer
+        logger.info("[LOG] Creating simplified preprocessing pipeline")
         
-        # String indexers for categorical columns
+        # Simple label encoding for categorical columns (no one-hot encoding)
         indexers = [StringIndexer(inputCol=c, outputCol=f"{c}_idx", handleInvalid="keep")
                     for c in cat_cols]
         
-        # One-hot encoders
-        encoders = OneHotEncoder(
-            inputCols=[f"{c}_idx" for c in cat_cols],
-            outputCols=[f"{c}_vec" for c in cat_cols],
-            handleInvalid="keep"
-        )
-
-        # Feature assembler
-        feature_cols = num_cols + [f"{c}_vec" for c in cat_cols]
+        # Feature assembler - include both numerical and indexed categorical columns
+        feature_cols = num_cols + [f"{c}_idx" for c in cat_cols]
         assembler = VectorAssembler(inputCols=feature_cols, outputCol="features", handleInvalid="keep")
 
-        # Create pipeline
-        pipe = Pipeline(stages=indexers + [encoders, assembler])
+        # Create simplified pipeline
+        pipe = Pipeline(stages=indexers + [assembler])
 
         # 9) Fit preprocessing pipeline and transform
         logger.info("[LOG] Fitting and applying preprocessing pipeline")
@@ -350,7 +376,8 @@ def preprocess_titanic(raw_csv: str = RAW_CSV,
             "categorical_features": len(cat_cols),
             "numerical_features": len(num_cols),
             "quality_issues_found": len(quality_report.get("quality_issues", [])),
-            "imputation_applied": True
+            "imputation_applied": True,
+            "encoding_strategy": "label_encoding"
         }
         
         with open(f"{VALIDATION_REPORT_DIR}/processing_summary.json", "w") as f:
