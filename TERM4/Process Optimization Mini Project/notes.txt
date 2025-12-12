@@ -1,0 +1,12 @@
+3 label classes for Oscillatory , Noisy , Disturbance 
+
+how many features to be extracted 
+
+
+freq - acf 
+time domain 1 feat 
+statistical -> std , mean 
+time domain = error pv-sd 
+
+
+
