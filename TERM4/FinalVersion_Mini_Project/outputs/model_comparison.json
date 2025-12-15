@@ -1,0 +1,174 @@
+{
+    "Oscillation_Flag": {
+        "RandomForest": {
+            "latency": 0.2498349666595459,
+            "accuracy": 0.74,
+            "roc_auc": 0.6217105263157896,
+            "model_name": "RandomForest",
+            "feature_importance": {
+                "pv_std": 0.05183371425493522,
+                "error_std": 0.07612126482086651,
+                "error_mean_abs": 0.09727954306219934,
+                "pv_drift_slope": 0.08137861091713841,
+                "error_zero_crossings": 0.06140013455450569,
+                "psd_dom_freq": 0.03279420596742468,
+                "psd_peak_ratio": 0.0572952765682413,
+                "acf_num_peaks": 0.024443371155547084,
+                "acf_peak_val": 0.02765491046154513,
+                "acf_peak_lag": 0.03676700832350179,
+                "err_acf_energy": 0.06020317496418477,
+                "err_acf_decay_rate": 0.025398958154797525,
+                "pv_diff_std": 0.0714177951475084,
+                "spectral_entropy": 0.052897430296428814,
+                "op_flatness_ratio": 0.040813646760905445,
+                "op_jump_count": 0.05397562184879647,
+                "cc_max_val": 0.09182080630497365,
+                "cc_lag": 0.05650452643649977
+            }
+        },
+        "XGBoost": {
+            "latency": 0.11097698211669922,
+            "accuracy": 0.66,
+            "roc_auc": 0.5498903508771931
+        },
+        "SVM": {
+            "latency": 0.012471151351928712,
+            "accuracy": 0.71,
+            "roc_auc": 0.3930921052631579
+        },
+        "GradientBoosting": {
+            "latency": 0.18227968215942383,
+            "accuracy": 0.72,
+            "roc_auc": 0.5975877192982456
+        }
+    },
+    "Noise_Flag": {
+        "RandomForest": {
+            "latency": 0.24989805221557618,
+            "accuracy": 0.91,
+            "roc_auc": 0.608695652173913
+        },
+        "XGBoost": {
+            "latency": 0.05934000015258789,
+            "accuracy": 0.85,
+            "roc_auc": 0.6793478260869564,
+            "model_name": "XGBoost",
+            "feature_importance": {
+                "pv_std": 0.09369215369224548,
+                "error_std": 0.3061973750591278,
+                "error_mean_abs": 0.0,
+                "pv_drift_slope": 0.004722903948277235,
+                "error_zero_crossings": 0.1515318602323532,
+                "psd_dom_freq": 0.0131404809653759,
+                "psd_peak_ratio": 0.05754270777106285,
+                "acf_num_peaks": 0.0,
+                "acf_peak_val": 0.044711560010910034,
+                "acf_peak_lag": 0.03682377561926842,
+                "err_acf_energy": 0.014736493118107319,
+                "err_acf_decay_rate": 0.03428710624575615,
+                "pv_diff_std": 0.0018077401909977198,
+                "spectral_entropy": 0.06045814976096153,
+                "op_flatness_ratio": 0.038416434079408646,
+                "op_jump_count": 0.02155858464539051,
+                "cc_max_val": 0.08656221628189087,
+                "cc_lag": 0.033810388296842575
+            }
+        },
+        "SVM": {
+            "latency": 0.01113748550415039,
+            "accuracy": 0.74,
+            "roc_auc": 0.46059782608695654
+        },
+        "GradientBoosting": {
+            "latency": 0.1777054786682129,
+            "accuracy": 0.87,
+            "roc_auc": 0.5855978260869565
+        }
+    },
+    "Disturbance_Flag": {
+        "RandomForest": {
+            "latency": 0.2483686923980713,
+            "accuracy": 0.95,
+            "roc_auc": 0.5326315789473685
+        },
+        "XGBoost": {
+            "latency": 0.05950040817260742,
+            "accuracy": 0.92,
+            "roc_auc": 0.7052631578947368,
+            "model_name": "XGBoost",
+            "feature_importance": {
+                "pv_std": 0.019537774845957756,
+                "error_std": 0.03777662664651871,
+                "error_mean_abs": 0.06107722595334053,
+                "pv_drift_slope": 0.1349729746580124,
+                "error_zero_crossings": 0.023441998288035393,
+                "psd_dom_freq": 0.011275319382548332,
+                "psd_peak_ratio": 0.05268106982111931,
+                "acf_num_peaks": 0.003958462737500668,
+                "acf_peak_val": 0.0,
+                "acf_peak_lag": 0.32432201504707336,
+                "err_acf_energy": 0.06194394454360008,
+                "err_acf_decay_rate": 0.0,
+                "pv_diff_std": 0.0,
+                "spectral_entropy": 0.044094350188970566,
+                "op_flatness_ratio": 0.2154715657234192,
+                "op_jump_count": 0.0,
+                "cc_max_val": 0.002225385280326009,
+                "cc_lag": 0.007221334148198366
+            }
+        },
+        "SVM": {
+            "latency": 0.012184667587280273,
+            "accuracy": 0.82,
+            "roc_auc": 0.6589473684210526
+        },
+        "GradientBoosting": {
+            "latency": 0.1669248104095459,
+            "accuracy": 0.92,
+            "roc_auc": 0.4926315789473685
+        }
+    },
+    "Stiction_Score": {
+        "RandomForest": {
+            "latency": 0.12875165939331054,
+            "r2": 0.020167960660093742,
+            "mse": 1514.0065556104,
+            "model_name": "RandomForest",
+            "feature_importance": {
+                "pv_std": 0.02610656587167985,
+                "error_std": 0.013365531450726846,
+                "error_mean_abs": 0.013701760638931809,
+                "pv_drift_slope": 0.06025774109782848,
+                "error_zero_crossings": 0.05207796627874501,
+                "psd_dom_freq": 0.10420601579256361,
+                "psd_peak_ratio": 0.03696173514770537,
+                "acf_num_peaks": 0.010036843402050277,
+                "acf_peak_val": 0.02610853107667058,
+                "acf_peak_lag": 0.01717631162100763,
+                "err_acf_energy": 0.06479388480045531,
+                "err_acf_decay_rate": 0.021938551692493053,
+                "pv_diff_std": 0.03783165760062453,
+                "spectral_entropy": 0.27781681351784565,
+                "op_flatness_ratio": 0.026540716541558054,
+                "op_jump_count": 0.07986315627475328,
+                "cc_max_val": 0.08454669465075632,
+                "cc_lag": 0.04666952254360429
+            }
+        },
+        "XGBoost": {
+            "latency": 0.04697580337524414,
+            "r2": -0.2659496811283337,
+            "mse": 1956.106801317098
+        },
+        "SVR": {
+            "latency": 0.004166030883789062,
+            "r2": -0.2401019758277323,
+            "mse": 1916.16771614597
+        },
+        "GradientBoosting": {
+            "latency": 0.06319952011108398,
+            "r2": -0.11696450210862075,
+            "mse": 1725.8994508036435
+        }
+    }
+}

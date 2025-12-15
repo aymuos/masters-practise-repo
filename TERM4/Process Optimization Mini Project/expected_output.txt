@@ -1,0 +1,11 @@
+Loop ID: 92
+
+Oscillation: Yes (Strong periodic cycling detected)
+Noise: Low (Minimal high-frequency jitter)
+Disturbance: Maybe (Some moderate spikes observed)
+Variance: High (High PV spread relative to mean)
+Stiction Probability: 0.71
+
+SUMMARY:
+The loop shows strong oscillatory behavior with significant variance.
+Stiction is moderately likely based on OP flatness and deadband features.
